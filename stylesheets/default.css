@@ -1,0 +1,92 @@
+header {
+  display: inline;
+  float:left;
+  background-color: #3DA1F5;
+  color: white;
+  width: 100%;
+}
+
+h1 {
+  display: inline-block;
+  margin-top: 5px;
+  margin-left: 25px;
+}
+
+header a,
+header a:visited {
+  color: white;
+}
+
+header a:hover {
+  font-weight: bolder;
+}
+
+nav {
+  float:right;
+}
+
+ul {
+  list-style: none;
+}
+
+li {
+  float: right;
+  margin: 0 15px;
+}
+
+aside {
+  clear:right;
+  margin-top: 10px;
+  position: inline-block;
+  float: right;
+  width: 25%;
+  background-color: #BAB5A8;
+}
+
+aside p {
+  margin: 5px;
+}
+
+aside img {
+  display:block;
+  margin: 10px auto;
+  width: 100px;
+  height: 100px;
+}
+
+#projects {
+  clear:left;
+  position: inline-block;
+  margin-left: 10px;
+  width: 70%;
+}
+
+#projects h1 {
+  margin-left: 5px;
+  margin-bottom: 5px;
+}
+
+article {
+  border: 1px solid black;
+  background-color: #BAB5A8;
+  margin-bottom: 10px;
+}
+
+article h2 {
+  margin: 5px;
+}
+
+article p {
+  margin: 5px;
+}
+
+footer {
+  background-color: #69665E;
+  color: white;
+  clear: both;
+}
+
+footer:before {
+  content:"\a";
+  white-space: pre;
+}
