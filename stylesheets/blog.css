@@ -1,0 +1,25 @@
+header:after {
+  content:"\a";
+  white-space: pre;
+}
+
+#main-post {
+
+    margin: 5px;
+    float:left;
+    width: 70%;
+    padding: 5px;
+    border: 1px solid black;
+}
+
+#title * {
+  margin: 0px;
+}
+
+#comments {
+    clear:both;
+}
+
+article {
+  width: 70%;
+}
