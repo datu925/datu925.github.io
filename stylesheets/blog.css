@@ -23,3 +23,8 @@ header:after {
 article {
   width: 70%;
 }
+
+img {
+  display: inline-block;
+  width: 100%;
+}

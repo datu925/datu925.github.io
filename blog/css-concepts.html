@@ -65,7 +65,12 @@
     <p>
         There are a couple of complications and things to watch out for, which I'll mention briefly. One is simply browser compatibility - inline-blocks are not fully supported by ancient versions of Internet Explorer that you probably don't want to use anyway (there are some workarounds if you're really devoted). Additionally, there is an unexpected issue with whitespace. Both inline and inline-block elements won't be exactly adjacent to each other, even if you set the margin to 0. There are two workarounds: 1) set a negative margin, or 2) remove the relevant whitespace from your HTML. For instance, in our example above, writing the HTML like so:
     </p>
-    <img src="no_whitespace.png" alt="HTML without whitespace">
+    <p>
+        &lt;div&gt;Div 1&lt;/div&gt;&lt;div&gt;Div 2&lt;/div&gt;
+    </p>
+    <p>
+        Alternatively, you could comment out the whitespace. It's a funky fix, and tinkering with your HTML to produce a design change is generally a bad sign, but in some cases you may prefer it to the negative margin fix.
+    </p>
     <p>
         Nonetheless, inline-blocks are a very useful tool in your web design arsenal and can simplify your work in many cases.
     </p>
