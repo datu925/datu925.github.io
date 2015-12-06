@@ -25,11 +25,11 @@ nav {
   float:right;
 }
 
-ul {
+header ul {
   list-style: none;
 }
 
-li {
+header li {
   float: right;
   margin: 0 15px;
 }
