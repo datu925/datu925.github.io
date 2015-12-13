@@ -1,0 +1,11 @@
+#main,
+#contact {
+    float:left;
+    width: 70%;
+    padding: 10px;
+}
+
+#headshot {
+  width: 75%;
+  height: auto;
+}
