@@ -60,7 +60,7 @@ friends.group_by { |x| x[0] }
 </code></pre>
     </p>
     <p>
-        Poor Steve. Anyway, the sky is the limit. Note that for cases where you just need some of the values (e.g. only my friends whose names start with "A" or only my friends who aren't "Steve"), you should probably use something like select or reject. And if you have the simpler case of just having a binary, true-false split, look into using the partition method, which has the sometimes-advantage of returning an array of two arrays (first the true values, then the false/nil ones), rather than a hash.
+        Poor Steve. Anyway, the sky is the limit. Note that for cases where you just need some of the values (e.g. only my friends whose names start with "A" or only my friends who aren't "Steve"), you should probably use something like <a href=http://ruby-doc.org/core-2.2.3/Enumerable.html#method-i-select">select</a> or <a href="http://ruby-doc.org/core-2.2.3/Enumerable.html#method-i-reject">reject</a>. And if you have the simpler case of just having a binary, true-false split, look into using the <a href="http://ruby-doc.org/core-2.2.3/Enumerable.html#method-i-partition">partition</a> method, which has the sometimes-advantage of returning an array of two arrays (first the true values, then the false/nil ones), rather than a hash.
     </p>
     <p>
         Happy grouping!
