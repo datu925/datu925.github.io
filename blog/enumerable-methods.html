@@ -1,0 +1,85 @@
+<!DOCTYPE HTML>
+<html>
+
+<head>
+  <title>Phase 0 Blog</title>
+  <link type="text/css" rel="stylesheet" href="../stylesheets/default.css" />
+  <link type="text/css" rel="stylesheet" href="../stylesheets/blog.css" />
+</head>
+
+<body>
+
+<header>
+
+    <h1>Dan's Phase 0 Blog</h1>
+
+    <nav id="links">
+      <ul>
+        <li><a href="../index.html">Projects</a></li>
+        <li><a href="index.html">Blog</a></li>
+        <li><a href="#">About Me/Contact</a></li>
+      </ul>
+    </nav>
+</header>
+
+    <aside id="sidebar">
+      <img src="../imgs/lamb%20stew%20screenshot.png" alt="My Picture" />
+      <p>I'm new to the development world, but deeply committed to learning the skills to become a great developer. This is my work site, where you can see what I've been working on, what I've been thinking about, and where I live (just kidding).</p>
+    </aside>
+
+    <section id="title">
+    <h2>Programmer Fundamentals: Git, GitHub, and the CLI</h2>
+        <p>11/15/2015</p>
+        <p>Dan Turcza</p>
+        <p>Tags</p>
+    </section>
+
+<section id="main-post">
+<p>
+        Today, we're going to learn a bit about an Enumerable method called group_by. Enumerable methods are mixed in with arrays and hashes, so you might use group_by with an array or a hash. Many of these Enumerable methods are useful for sorting, filtering, or aggregating arrays and hashes, and group_by is a great example.
+    </p>
+    <p>
+        If you think about what a group_by might do based on the name (or if you're familiar with SQL), you might guess that it will return items in the original list in different GROUPS based on their values. And that's exactly right. You pass group_by an object and a code block that describes what you want your groups to be, and group_by returns the groupings. For instance, a typical example is:
+    </p>
+    <p>
+        <pre><code>num_array = [1,2,3,4,5,6,7,8,9]
+num_array.group_by { |x| x % 3 }
+=> { 1: [1,4,7], 2: [2,5,8], 0: [3, 6, 9] }
+</code></pre>
+    </p>
+    <p>
+        So what happened? If you look in the block we passed to group_by, you'll see that it can return one of 3 values based on the % or modulus function. No matter what the number is, x % 3 will return 0, 1, or 2, the possible remainders when we divide a number by 3. So group_by is taking all of the numbers that divide evenly (remainder is 0) and putting them in an array, then putting it in a hash with that 0 value. And same thing with the numbers that leave a remainder of one and two. So, to summarize, you are returned a hash where the key is a particular outcome of your block, and the values are arrays containing elements that resulted in those outcomes.
+    </p>
+    <p>
+        Another great example would be grouping your friends based on the first letter of their names. So:
+    </p>
+    <p>
+            <pre><code>friends = ["Alice","Alex","Anthony","Barry","Blake","Bruno","Steve"]
+friends.group_by { |x| x[0] }
+=> { "A": ["Alice","Alex","Anthony"], "B": ["Barry","Blake","Bruno"], "S": ["Steve"]}
+</code></pre>
+    </p>
+    <p>
+        Poor Steve. Anyway, the sky is the limit. Note that for cases where you just need some of the values (e.g. only my friends whose names start with "A" or only my friends who aren't "Steve"), you should probably use something like select or reject. And if you have the simpler case of just having a binary, true-false split, look into using the partition method, which has the sometimes-advantage of returning an array of two arrays (first the true values, then the false/nil ones), rather than a hash.
+    </p>
+    <p>
+        Happy grouping!
+    </p>
+</section>
+
+<section id = "comments">
+<h3>Comments</h3>
+    <!--
+    <article>Comment 1</article>
+    <article>Comment 2</article>
+    <article>Comment 3</article>
+  -->
+</section>
+
+<footer>
+  <p>&copy; 2015 Dan Turcza</p>
+</footer>
+
+</body>
+
+</html>
