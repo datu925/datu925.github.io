@@ -1,20 +1,22 @@
 html,
 body {
   height: 100%;
+  width: 100%;
+  margin:0;
 }
 
 header {
   display: inline;
   float:left;
-  background-color: #3DA1F5;
+  background-color: #222F5C;
   color: white;
   width: 100%;
 }
 
 h1 {
   display: inline-block;
-  margin-top: 5px;
-  margin-left: 25px;
+  vertical-align: middle;
+  margin: 5px 0 5px 25px;
 }
 
 header a,
@@ -40,12 +42,21 @@ header li {
 }
 
 aside {
-  clear:right;
-  margin-top: 10px;
-  position: inline-block;
+  display: inline-block;
+  position: relative;
   float: right;
   width: 25%;
-  background-color: #BAB5A8;
+  height: 100%;
+  background-color: #586FC0;
+}
+
+.back {
+  z-index: -1;
+  right: 0;
+  top: 0;
+  bottom: 0;
+  background-color: #586FC0;
+  position: fixed;
 }
 
 aside p {
@@ -59,39 +70,37 @@ aside img {
   height: 100px;
 }
 
-#projects {
+section {
   clear:left;
   position: inline-block;
   margin-left: 10px;
-  width: 70%;
+  margin-right: 10px;
+  width: 73.5%;
 }
 
-#projects h1 {
+section h1 {
   margin-left: 5px;
   margin-bottom: 5px;
 }
 
 article {
   border: 1px solid black;
-  background-color: #BAB5A8;
+  background-color: #8C8C8C;
   margin-bottom: 10px;
 }
 
-article h2 {
+article * {
   margin: 5px;
 }
 
-article p {
-  margin: 5px;
-}
 
 footer {
-  background-color: #69665E;
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  background-color: #222F5C;
   color: white;
   clear: both;
-}
-
-footer:before {
-  content:"\a";
-  white-space: pre;
+  padding-left: 10px;
 }
