@@ -1,13 +1,8 @@
-header:after {
-  content:"\a";
-  white-space: pre;
-}
-
-#main-post {
+section {
 
     margin: 5px;
     float:left;
-    width: 70%;
+    width: 72%;
     padding: 10px;
     border: 1px solid black;
 }
@@ -18,10 +13,7 @@ header:after {
 
 #comments {
     clear:both;
-}
-
-article {
-  width: 70%;
+    margin-bottom: 100px;
 }
 
 img {
