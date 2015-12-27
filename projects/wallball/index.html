@@ -16,26 +16,30 @@
   var canvas = document.getElementById("myCanvas");
   var ctx = canvas.getContext("2d");
 
-  var x = canvas.width/2;
-  var y = canvas.height/2;
+  var ball = {
+    "x": canvas.width/2,
+    "y": canvas.height/2,
+    "dx": 2,
+    "dy": -2,
+    "radius": 10
+  };
 
-  var dx = 2;
-  var dy = -2;
+  var paddle = {
+    "height": 10,
+    "width": 75,
+    "rightPressed": false,
+    "leftPressed": false
+  }
+  paddle["x"] = (canvas.width-paddle.width)/2;
 
-  var ballRadius = 10;
-
-  var paddleHeight = 10;
-  var paddleWidth = 75;
-  var paddleX = (canvas.width-paddleWidth)/2;
-
-  var rightPressed = false;
-  var leftPressed = false;
-
-  var score = 0;
+  var metadata = {
+    "score": 0,
+  }
+  var session_high_score;
 
   function drawBall() {
       ctx.beginPath();
-      ctx.arc(x, y, ballRadius, 0, Math.PI*2);
+      ctx.arc(ball.x, ball.y, ball.radius, 0, Math.PI*2);
       ctx.fillStyle = "#0095DD";
       ctx.fill();
       ctx.closePath();
@@ -43,7 +47,7 @@
 
   function drawPaddle() {
     ctx.beginPath();
-    ctx.rect(paddleX, canvas.height-paddleHeight, paddleWidth, paddleHeight);
+    ctx.rect(paddle.x, canvas.height-paddle.height, paddle.width, paddle.height);
     ctx.fillStyle = "#0095DD";
     ctx.fill();
     ctx.closePath();
@@ -52,7 +56,7 @@
   function drawScore() {
     ctx.font = "16px Arial";
     ctx.fillStyle = "#0095DD";
-    ctx.fillText("Score: "+score, 8, 20);
+    ctx.fillText("Score: "+metadata.score, 8, 20);
   }
 
 
@@ -62,34 +66,53 @@
       drawPaddle();
       drawScore();
 
-      if(x + dx > canvas.width || x + dx < 0) {
-        dx = -dx;
+      if(ball.x + ball.dx > canvas.width || ball.x + ball.dx < 0) {
+        ball.dx = -ball.dx;
       }
-      if(y + dy < ballRadius) {
-          dy = -dy;
-      } else if(y + dy > canvas.height-ballRadius)
+      if(ball.y + ball.dy < ball.radius) {
+          ball.dy = -ball.dy;
+      } else if(ball.y + ball.dy > canvas.height-ball.radius)
       {
-          if(x > paddleX && x < paddleX + paddleWidth) {
-              score += 1;
-              dy = -dy;
-              dx *= 1.05;
-              dy *= 1.05;
+          if(ball.x > paddle.x && ball.x < paddle.x + paddle.width) {
+              metadata.score += 1;
+              ball.dy = -ball.dy;
+              ball.dx *= 1.05;
+              ball.dy *= 1.05;
           }
           else {
-              alert("GAME OVER\nFinal Score: "+score);
-              document.location.reload();
+            gameEnd();
           }
       }
 
-      if(rightPressed && paddleX < canvas.width-paddleWidth) {
-          paddleX += 7;
+      if(paddle.rightPressed && paddle.x < canvas.width-paddle.width) {
+          paddle.x += 7;
       }
-      else if(leftPressed && paddleX > 0) {
-          paddleX -= 7;
+      else if(paddle.leftPressed && paddle.x > 0) {
+          paddle.x -= 7;
       }
 
-      x += dx;
-      y += dy;
+      ball.x += ball.dx;
+      ball.y += ball.dy;
+  }
+
+  function gameEnd() {
+    if (!sessionStorage.getItem("session_high_score")) {
+      session_high_score = metadata.score;
+      sessionStorage.setItem("session_high_score", session_high_score);
+    } else {
+      session_high_score = sessionStorage.getItem("session_high_score");
+    }
+
+    if (metadata.score >= session_high_score) {
+      session_high_score = metadata.score;
+      sessionStorage.setItem("session_high_score", session_high_score);
+      alert("HIGH SCORE!!\nGAME OVER\nFinal Score: "+metadata.score);
+      document.location.reload();
+    } else {
+      alert("GAME OVER\nFinal Score: "+metadata.score+
+        "\nHigh Score: "+session_high_score);
+      document.location.reload();
+    }
   }
 
   document.addEventListener("keydown", keyDownHandler, false);
@@ -97,19 +120,19 @@
 
   function keyDownHandler(e) {
     if(e.keyCode == 39) {
-        rightPressed = true;
+        paddle.rightPressed = true;
     }
     else if(e.keyCode == 37) {
-        leftPressed = true;
+        paddle.leftPressed = true;
     }
   }
 
-function keyUpHandler(e) {
+  function keyUpHandler(e) {
     if(e.keyCode == 39) {
-        rightPressed = false;
+        paddle.rightPressed = false;
     }
     else if(e.keyCode == 37) {
-        leftPressed = false;
+        paddle.leftPressed = false;
     }
   }
 
