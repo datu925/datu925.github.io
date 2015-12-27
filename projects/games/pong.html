@@ -62,6 +62,14 @@
     ctx.closePath();
   }
 
+  function drawAI() {
+    ctx.beginPath();
+    ctx.rect(canvas.width - AI.width, AI.y, AI.width, AI.height);
+    ctx.fillStyle = "#AA3939";
+    ctx.fill();
+    ctx.closePath();
+  }
+
   function drawScore() {
     ctx.font = "16px Arial";
     ctx.fillStyle = "#0095DD";
@@ -82,13 +90,19 @@
       drawBoard();
       drawBall();
       drawPaddle();
+      drawAI();
       drawScore();
 
       if(ball.y + ball.dy > canvas.height || ball.y + ball.dy < 0) {
         ball.dy = -ball.dy;
       }
       if(ball.x + ball.dx > canvas.width-ball.radius) {
+        if (ball.y > AI.y && ball.y < AI.y + AI.height)
           ball.dx = -ball.dx;
+        else {
+          alert("You win! But this is not possible with current AI.");
+          document.location.reload();
+        }
       } else if(ball.x + ball.dx < ball.radius)
       {
           if(ball.y > paddle.y && ball.y < paddle.y + paddle.height) {
@@ -111,6 +125,8 @@
 
       ball.x += ball.dx;
       ball.y += ball.dy;
+
+      AI.y += ball.dy;
   }
 
   function gameEnd() {
