@@ -43,6 +43,38 @@ session.
 Create the event listeners to figure out whether user is pressing the up or down
 arrow keys, and translate that into the paddle states of moving up or down.
 
+
+Reflection
+
+What was the most difficult part of this challenge?
+
+I wanted to initialize a property in an object based on the values of previous
+properties in the object, and it took me a while to figure out that you couldn't do
+that (notice how I initialize the paddle and AI objects but then add one more property
+afterward). JavaScript is permissive, so wasn't throwing a clear error to me; it just
+wasn't rendering the game.
+
+What did you learn about creating objects and functions that interact with one another?
+
+It's really fun. I actually felt it was a lot easier to understand how to program the
+AI after programming the initial, user-controlled panel. And object-oriented
+programming is easier to read and avoids lots of convoluted variable names. For
+instance, you can just have ball.location and paddle.location instead of
+ball_location and paddle_location.
+
+Did you learn about any new built-in methods you could use in your refactored solution? If so, what were they and how do they work?
+
+I learned about sessionStorage and localStorage (specifically, the methods getItem
+and setItem) and how you can store information even after the browser window is
+refreshed or the browser is closed. It feels a little presumptuous to do the latter
+without telling your user! But very useful in many contexts.
+
+How can you access and manipulate properties of objects?
+
+Through either bracket ([]) or dot (.) notation.
+
+
+
 */
 
   var canvas = document.getElementById("myCanvas");
