@@ -9,99 +9,74 @@ body {
 header {
   display: inline;
   float:left;
-  background-color: #222F5C;
-  color: white;
   width: 100%;
 }
 
-h1 {
+h1, h3 {
   display: inline-block;
   vertical-align: middle;
-  margin: 5px 0 5px 25px;
+  margin: 0;
 }
 
-header a,
-header a:visited {
+.center {
+  display: inline-block;
+}
+
+.box {
+  display: inline-block;
+  width: 5%;
+  min-width: 100px;
+  text-align: center;
   color: white;
+  font-size: 0.5em;
 }
 
-header a:hover {
+#top {
+  background-color: #80397B;
+}
+
+#bottom {
+  background-color: #227446;
+}
+
+#left {
+  background-color: #DA3B01;
+}
+
+#right {
+  background-color: #0072C6;
+}
+
+a,
+a:visited {
+  color: white;
+  text-decoration: none;
+}
+
+.center a {
+  color: black;
+}
+
+a:hover {
   font-weight: bolder;
 }
 
-nav {
-  float:right;
-}
-
-header ul {
-  list-style: none;
-}
-
-header li {
-  float: right;
-  margin: 0 15px;
-}
-
-aside {
-  display: inline-block;
-  position: relative;
-  float: right;
-  width: 25%;
-  height: 100%;
-  background-color: #586FC0;
-}
-
-.back {
-  z-index: -1;
-  right: 0;
-  top: 0;
-  bottom: 0;
-  background-color: #586FC0;
-  position: fixed;
-}
-
-aside p {
-  margin: 5px;
-}
-
-aside img {
-  display:block;
-  margin: 10px auto;
-  width: 75%;
-  height: auto;
-}
 
 section {
-  clear:left;
-  position: inline-block;
   margin-left: 10px;
   margin-right: 10px;
-  width: 73.5%;
-}
-
-section h1 {
-  margin-left: 5px;
-  margin-bottom: 5px;
 }
 
 article {
-  border: 1px solid black;
+  display: inline-block;
+  vertical-align: top;
+  width: 40%;
+  min-height: 250px;
+  margin: 25px 4.5%;
   background-color: #8C8C8C;
   margin-bottom: 10px;
 }
 
 article * {
   margin: 5px;
-}
-
-
-footer {
-  position: fixed;
-  bottom: 0;
-  left: 0;
-  right: 0;
-  background-color: #222F5C;
-  color: white;
-  clear: both;
-  padding-left: 10px;
 }
