@@ -3,6 +3,7 @@ body {
   height: 100%;
   width: 100%;
   margin:0;
+  font-family: 'Raleway', sans-serif;
 }
 
 header {
@@ -66,8 +67,8 @@ aside p {
 aside img {
   display:block;
   margin: 10px auto;
-  width: 100px;
-  height: 100px;
+  width: 75%;
+  height: auto;
 }
 
 section {
