@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/d3/5.5.0/d3.min.js"></script>
+    <script src="https://cdn.plot.ly/plotly-latest.min.js"></script>
+    <script
+  src="https://code.jquery.com/jquery-3.3.1.min.js"
+  integrity="sha256-FgpCb/KJQlLNfOu91ta32o/NMZxltwRo8QtmkMRdAu8="
+  crossorigin="anonymous"></script>
+    <title>Years to Retirement Chart</title>
+</head>
+<body>
+    <div id="chart" style="width:800px;height:800px;"></div>
+    <form id="limits" action="submit">
+        <input type="text" name=middleLimit placeholder="Avg Career Length"></input>
+        <input type="text" name=earlyLimit placeholder="What's a short career?"></input>
+        <input type="text" name=lateLimit placeholder="What's a long career?"></input>
+        <input type="submit" value="Recalculate"></input>
+    </form>
+    <script src="spending_model.js"></script>
+    
+</body>
+</html>
+
