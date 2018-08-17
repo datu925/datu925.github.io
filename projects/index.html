@@ -2,55 +2,43 @@
 <html>
 
 <head>
-  <title>Dan Turcza, Web Developer</title>
-  <link type="text/css" rel="stylesheet" href="../stylesheets/default.css" />
-  <link href='https://fonts.googleapis.com/css?family=Raleway' rel='stylesheet' type='text/css'>
+    <title>Dan Turcza, Web Developer</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0-rc.2/css/materialize.min.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0-rc.2/js/materialize.min.js"></script>
+    <link href='https://fonts.googleapis.com/css?family=Raleway' rel='stylesheet' type='text/css'>
+    <link rel="stylesheet" href="../stylesheets/custom.css">
 </head>
 
-  <body>
+<body>
+  <div class="row">
+    <div class="col s3 teal lighten-5 sidenav sidenav-fixed">
+        <img class="portrait" src="../imgs/1994-dan-turcza.jpg" alt="Picture of me">
+        <ul class="center-align">
+          <li><a href="../index.html">Home</a></li>
+          <li><a href="#">Projects</a></li>
+        </ul>
+    </div>
+    <div class="col s12" id="main-content">
+      <div class="container">
+          <section id="projects">
+              <!-- <h1>Projects</h1> -->
+              <article id="project-2">
+                  <h2>Income, Spending, and Years to Retirement</h2>
+                    <p>I'm interested in early retirement (aka the FIRE movement) and made a chart that shows the impact of spending and income on how long it takes you to retire. Hoping to expand this to become a visual introduction to FIRE principles. The chart was built with Plotly.js.</p>
+                    <p><a href="../spending_model/spending_model.html">Check it out</a>
+              </article>
+          
+              <!-- <article id="project-2">
+                <h2>Pong</h2>
+                  <p>I expanded on a <a href="https://developer.mozilla.org/en-US/docs/Games/Workflows/2D_Breakout_game_pure_JavaScript">wallball tutorial</a> to add more of a pong feel, changing the orientation and adding an AI. Currently, the AI is perfect, but I left open the option of creating difficulty levels later.</p>
+                  <p><a href="games/pong.html">Check it out</a>
+              </article> -->
+            </section>
+      </div>
+    </div>
 
-    <header>
-      <nav id="links">
-        <div class="center">
-          <h1><a href="../index.html">Dan Turcza, Web Developer</a></h1>
-        </div>
-        <div class="box" id="top">
-          <h2><a href="../about.html">About Me</a></h1>
-        </div>
-        <div class="box" id="left">
-          <h2><a href="index.html">Projects</a></h1>
-        </div>
-        <div class="box" id="right">
-          <h2><a href="../contact.html">Contact</a></h1>
-        </div>
-      </nav>
-    </header>
+  </div>
 
-    <section id="projects">
-      <!-- <h1>Projects</h1> -->
-      <article id="project-2">
-          <h2>Income, Spending, and Years to Retirement</h2>
-            <p>I'm interested in early retirement (aka the FIRE movement) and made a chart that shows the impact of spending and income on how long it takes you to retire. Hoping to expand this to become a visual introduction to FIRE principles. The chart was built with Plotly.js.</p>
-            <p><a href="../spending_model/spending_model.html">Check it out</a>
-        </article>
-
-      <article id="project-2">
-        <h2>Pong</h2>
-          <p>I expanded on a <a href="https://developer.mozilla.org/en-US/docs/Games/Workflows/2D_Breakout_game_pure_JavaScript">wallball tutorial</a> to add more of a pong feel, changing the orientation and adding an AI. Currently, the AI is perfect, but I left open the option of creating difficulty levels later.</p>
-          <p><a href="games/pong.html">Check it out</a>
-      </article>
-
-      <article id="project-3">
-        <h2>HTML 5 Cheat Sheet</h2>
-          <p>A cheat sheet of HTML structural/semantic elements.</p>
-          <p><a href="cheat-sheet.html">Check it out</a>
-      </article>
-
-      <p><a href="#">See all projects...</a></p>
-    </section>
-
-
-
-  </body>
+</body>
 
 </html>
