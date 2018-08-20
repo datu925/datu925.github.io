@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Map Methodology and Attribution</title>
+</head>
+<body>
+    <h1>Map Attribution</h1>
+    
+    <p>This map was made using Leaflet.js, with tiles provided by Mapbox. The data comes from Chicago's <a href="https://data.cityofchicago.org/">open data portal</a>.</p>
+    
+    <h1>Methodology</h1>
+
+    <p>This is a fun dataset, but the finished product doesn't really do well at demonstrating insights visually. For instance, the Pink line is the fastest growing line, but it's hard to see that. Probably the two biggest insights from the current graphs are the relative sizes of the different lines, plus the fact that ridership has increased significantly over time.</p>
+
+    <p>To acquire ridership data, I used the "Ridership - 'L' Station Entries - Daily Totals" dataset, located <a href="https://data.cityofchicago.org/Transportation/CTA-Ridership-L-Station-Entries-Daily-Totals/5neh-572f">here</a>. This dataset largely speaks for itself, but doesn't asssociate stations with lines. For that, I had to combine it with the "System Information - List of 'L' Stops" dataset, located <a href="http://data.cityofchicago.org/dataset/CTA-System-Information-List-of-L-Stops/8pix-ypme">here</a>. When a station was associated by multiple lines, I split the ridership evenly across lines.</p>
+
+    <p>To work with geographic data, I started with a KMZ file from the city portal located <a href="https://data.cityofchicago.org/Transportation/CTA-L-Rail-Lines-kml/sgbp-qafc">here</a>. I used an online converter to convert to GeoJSON, which plays more nicely with Leaflet. I had to duplicate some segments so that they would appear on multiple lines.</p>
+
+    <p>Ultimately, I decided to incorporate d3 so that I could get some transitions between years, though there are probably Leaflet plugins that could have done this more easily. I used noUISlider for the slider, which I wired up as an extension of Leaflet's controls.</p>
+</body>
+</html>
