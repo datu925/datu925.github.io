@@ -96,17 +96,16 @@ function buildChart(spending, income) {
 
     var xTicks = buildTicks(4);
     var yTicks = buildTicks(10);
-    debugger;
 
     var layout = {
-        title: "Years to Retirement by Spending and Income Rates",
+        title: "Years to Retirement<br> by Spending and Income Rates",
         xaxis: {
-            title: `Income<br>Sources: <a href="https://www.bls.gov/cex/2016/combined/decile.pdf">Spending</a>, <a href="https://dqydj.com/united-states-household-income-brackets-percentiles/">Income</a><br>Data is directionally accurate but required some imputation`,
+            title: `Income Percentile<br><a href="methodology.html">Methodology</a>`,
             tickvals: xTicks.values,
             ticktext: xTicks.text,
         },
         yaxis: {
-            title: "Spending",
+            title: "Spending Percentile",
             tickvals: yTicks.values,
             ticktext: yTicks.text,
         }

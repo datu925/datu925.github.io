@@ -1,13 +1,3 @@
-#main-content {
-    padding-left: 300px;
-  }
-
-  @media only screen and (max-width : 992px) {
-    #main-content {
-      padding-left: 0;
-    }
-  }
-
 .portrait {
     display: block;
     margin-top: 40px;
@@ -18,3 +8,14 @@
 #main-content p {
     font-size: 1.25em;
 }
+
+@media screen and (min-width: 600px) {
+    .flex {
+        min-height: 100vh;;
+    }
+}
+
+.flex {
+    display: flex;
+    flex-wrap: wrap;
+  }
