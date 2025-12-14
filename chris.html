@@ -30,16 +30,17 @@
             top: 50%;
             left: 50%;
             transform: translate(-50%, -50%);
-            background: rgba(20, 20, 30, 0.95);
-            border: 2px solid #fff;
-            padding: 20px;
+            background: rgba(10, 10, 15, 0.98); /* Darker background */
+            border: 2px solid #ffd700; /* Gold border */
+            padding: 30px;
             text-align: center;
             display: none;
-            width: 300px;
-            box-shadow: 0 0 15px rgba(255,255,255,0.2);
-            border-radius: 8px;
+            width: 350px; /* Slightly wider for images */
+            box-shadow: 0 0 30px rgba(255, 215, 0, 0.3);
+            border-radius: 12px;
+            z-index: 100;
         }
-        #modal h2 { margin-top: 0; color: #ffd700; }
+        #modal h2 { margin-top: 0; color: #fff; font-size: 1.5rem; text-transform: uppercase; letter-spacing: 2px; }
         #modal p { margin: 10px 0; font-size: 1.2rem; }
         #modal .code { 
             background: #000; 
@@ -52,15 +53,27 @@
             user-select: text;
         }
         #modal button {
-            background: #fff;
+            background: #ffd700;
             color: #000;
             border: none;
-            padding: 8px 16px;
+            padding: 10px 20px;
             cursor: pointer;
             font-family: inherit;
             font-weight: bold;
+            font-size: 1rem;
+            text-transform: uppercase;
+            margin-top: 10px;
         }
-        #modal button:hover { background: #ccc; }
+        #modal button:hover { background: #ffea00; transform: scale(1.05); }
+
+        .gift-image {
+            width: 100%;
+            height: auto;
+            border-radius: 8px;
+            margin: 15px 0;
+            border: 1px solid #333;
+            box-shadow: 0 0 15px rgba(0,0,0,0.5);
+        }
         
         /* Mobile Controls Overlay (Optional if he opens on phone) */
         #controls {
@@ -80,9 +93,9 @@
     
     <div id="modal">
         <h2 id="gift-title">Game Title</h2>
-        <p>You found a gift!</p>
-        <div class="code" id="gift-code">XXXX-XXXX-XXXX</div>
-        <button onclick="closeModal()">Continue Quest</button>
+        <img id="gift-img" class="gift-image" src="" alt="Gift Reveal">
+        <p id="gift-msg" style="color: #aaa; font-style: italic;">Message...</p>
+        <button onclick="closeModal()">Awesome!</button>
     </div>
 </div>
 
@@ -97,25 +110,26 @@
 const GIFT_DATA = [
     {
         id: 1,
-        title: "Split Fiction",
-        code: "STEAM-CODE-HERE-123", // <--- REPLACE THIS
-        color: "#00d2ff", // Cyan theme
-        msg: "Reality is splitting..."
+        title: "Hollow Knight",
+        imageUrl: "./imgs/hollow_knight.webp", 
+        color: "#a0a0a0", 
+        msg: "A vast, inter-connected world awaits."
     },
     {
         id: 2,
-        title: "Hollow Knight",
-        code: "HK-KEY-CODE-456",     // <--- REPLACE THIS
-        color: "#a0a0a0", // Silver/Grey theme
-        msg: "Enter the void..."
+        title: "Silksong",
+        imageUrl: "./imgs/hollow_knight_silksong.webp", 
+        color: "#ff3333", 
+        msg: "Ascend the shining citadel!"
     },
     {
         id: 3,
-        title: "Silksong (Pre-order/Cash)",
-        code: "SILK-SONG-789",       // <--- REPLACE THIS
-        color: "#ff3333", // Red theme
-        msg: "Shaw!"
-    }
+        title: "Split Fiction",
+        // You can use a public URL, or a local file path if you upload the image to github
+        imageUrl: "./imgs/split_fiction.webp", 
+        color: "#00d2ff", 
+        msg: "Reality splits in two..."
+    },
 ];
 
 /**
@@ -296,17 +310,33 @@ function draw() {
     });
 
     // Draw Chests
+    const time = Date.now() / 300; // Speed of animation
+    
     chests.forEach(chest => {
         if (chest.opened) {
-            ctx.fillStyle = '#555'; // Open chest
+            ctx.fillStyle = '#333'; 
             ctx.fillRect(chest.x, chest.y + 10, chest.w, chest.h - 10);
         } else {
-            // Closed chest glow
-            ctx.shadowBlur = 10;
+            // MATH MAGICS:
+            // 1. Float: Move Y up and down by 5 pixels
+            const floatY = Math.sin(time) * 5;
+            
+            // 2. Pulse: Change shadow blur from 10 to 20
+            const pulse = 15 + Math.sin(time * 2) * 5;
+
+            ctx.shadowBlur = pulse;
             ctx.shadowColor = chest.data.color;
             ctx.fillStyle = chest.data.color;
-            ctx.fillRect(chest.x, chest.y, chest.w, chest.h);
-            ctx.shadowBlur = 0;
+            
+            // Draw chest at the floated position
+            ctx.fillRect(chest.x, chest.y + floatY, chest.w, chest.h);
+            
+            // Optional: Draw a little "sparkle" or outline
+            ctx.strokeStyle = '#fff';
+            ctx.lineWidth = 2;
+            ctx.strokeRect(chest.x, chest.y + floatY, chest.w, chest.h);
+            
+            ctx.shadowBlur = 0; // Reset so other things don't glow
         }
     });
 
@@ -364,15 +394,19 @@ function openChest(chest) {
     chest.opened = true;
     gameState = 'PAUSED';
     
-    // UI Update
+    // Update Text
     document.getElementById('gift-title').innerText = chest.data.title;
     document.getElementById('gift-title').style.color = chest.data.color;
-    document.getElementById('gift-code').innerText = chest.data.code;
+    document.getElementById('gift-msg').innerText = chest.data.msg;
+    
+    // Update Image
+    document.getElementById('gift-img').src = chest.data.imageUrl;
+    
     modal.style.display = 'block';
     
     // FX
-    createParticles(chest.x + chest.w/2, chest.y, 20, chest.data.color);
-    draw(); // Draw one last frame to show open chest
+    createParticles(chest.x + chest.w/2, chest.y, 30, chest.data.color);
+    draw(); 
 }
 
 function closeModal() {
