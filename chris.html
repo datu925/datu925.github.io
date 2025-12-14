@@ -47,9 +47,9 @@
             padding: 10px; 
             border: 1px dashed #666; 
             color: #0f0; 
-            font-weight: bold;
-            font-size: 1.1rem;
-            margin: 15px 0;
+            font-weight: bold; 
+            font-size: 1.1rem; 
+            margin: 15px 0; 
             user-select: text;
         }
         #modal button {
@@ -73,6 +73,8 @@
             margin: 15px 0;
             border: 1px solid #333;
             box-shadow: 0 0 15px rgba(0,0,0,0.5);
+            /* *** NEW CODE: Add transition for smoother hiding *** */
+            display: block; 
         }
         
         /* Mobile Controls Overlay (Optional if he opens on phone) */
@@ -95,7 +97,7 @@
         <h2 id="gift-title">Game Title</h2>
         <img id="gift-img" class="gift-image" src="" alt="Gift Reveal">
         <p id="gift-msg" style="color: #aaa; font-style: italic;">Message...</p>
-        <button onclick="closeModal()">Awesome!</button>
+        <button id="modal-btn" onclick="closeModal()">Awesome!</button>
     </div>
 </div>
 
@@ -125,7 +127,6 @@ const GIFT_DATA = [
     {
         id: 3,
         title: "Split Fiction",
-        // You can use a public URL, or a local file path if you upload the image to github
         imageUrl: "./imgs/split_fiction.webp", 
         color: "#00d2ff", 
         msg: "Reality splits in two..."
@@ -140,7 +141,7 @@ const ctx = canvas.getContext('2d');
 const modal = document.getElementById('modal');
 
 // Game State
-let gameState = 'START'; // START, PLAYING, PAUSED
+let gameState = 'START'; // START, PLAYING, PAUSED, END
 let keys = { right: false, left: false, up: false };
 
 // Player Object
@@ -196,9 +197,10 @@ function initLevel() {
     platforms.push({x: 1200, y: 300, w: 100, h: 20});
     platforms.push({x: 1400, y: 250, w: 100, h: 20});
     platforms.push({x: 1600, y: 200, w: 100, h: 20});
-    platforms.push({x: 1800, y: 350, w: 200, h: 50}); // Final platform riser
+    platforms.push({x: 1800, y: 150, w: 100, h: 20}); // Final platform riser
+    platforms.push({x: 2000, y: 100, w: 100, h: 20}); // Final platform riser
     // Chest 3 (End)
-    chests.push({x: 1900, y: 320, w: 40, h: 30, opened: false, data: GIFT_DATA[2]});
+    chests.push({x: 2030, y: 70, w: 40, h: 30, opened: false, data: GIFT_DATA[2]});
 }
 
 // Input Handling
@@ -255,9 +257,6 @@ function update() {
         }
     });
 
-    // Screen Boundaries / Camera
-    // Simple camera: we just offset drawing by player.x - center
-    
     // Chest Collision
     chests.forEach(chest => {
         if (!chest.opened && isColliding(player, chest)) {
@@ -355,7 +354,7 @@ function draw() {
 
 // Game Loop
 function loop() {
-    if (gameState !== 'PAUSED') {
+    if (gameState !== 'PAUSED' && gameState !== 'END') {
         update();
         draw();
         requestAnimationFrame(loop);
@@ -364,7 +363,6 @@ function loop() {
 
 // Helpers
 function colCheck(shapeA, shapeB) {
-    // A simple AABB collision check function
     let vX = (shapeA.x + (shapeA.width / 2)) - (shapeB.x + (shapeB.w / 2)),
         vY = (shapeA.y + (shapeA.height / 2)) - (shapeB.y + (shapeB.h / 2)),
         hWidths = (shapeA.width / 2) + (shapeB.w / 2),
@@ -400,7 +398,9 @@ function openChest(chest) {
     document.getElementById('gift-msg').innerText = chest.data.msg;
     
     // Update Image
-    document.getElementById('gift-img').src = chest.data.imageUrl;
+    const imgEl = document.getElementById('gift-img');
+    imgEl.style.display = 'block'; // Ensure it's visible
+    imgEl.src = chest.data.imageUrl;
     
     modal.style.display = 'block';
     
@@ -409,10 +409,68 @@ function openChest(chest) {
     draw(); 
 }
 
+// *** NEW CODE: MODIFIED CLOSE LOGIC ***
 function closeModal() {
-    modal.style.display = 'none';
-    gameState = 'PLAYING';
-    loop();
+    // Check if all chests are opened
+    const allOpened = chests.every(c => c.opened === true);
+
+    if (allOpened) {
+        triggerEndGame();
+    } else {
+        // Normal resume behavior
+        modal.style.display = 'none';
+        gameState = 'PLAYING';
+        loop();
+    }
+}
+
+// *** NEW CODE: END GAME LOGIC ***
+function triggerEndGame() {
+    // Keep modal open, but change content
+    document.getElementById('gift-title').innerText = "Merry Christmas, Chris!";
+    document.getElementById('gift-title').style.color = "#ffd700"; // Gold
+    
+    document.getElementById('gift-msg').innerText = "Happy playing!";
+    document.getElementById('gift-msg').style.color = "#fff";
+    document.getElementById('gift-msg').style.fontStyle = "normal";
+
+    // Hide the image element since we don't have a final gift image
+    document.getElementById('gift-img').style.display = 'none';
+
+    // Change button to restart
+    const btn = document.getElementById('modal-btn'); // I added an ID to the button in HTML
+    btn.innerText = "PLAY AGAIN";
+    btn.onclick = () => location.reload();
+    
+    // Fire some celebratory particles in the background?
+    gameState = 'END';
+    // Let's create a loop just for particles to make it festive behind the modal
+    const celebrationLoop = () => {
+        ctx.fillStyle = '#111';
+        ctx.fillRect(0, 0, canvas.width, canvas.height);
+        
+        // Random fireworks
+        if(Math.random() < 0.1) {
+             createParticles(Math.random() * canvas.width, Math.random() * canvas.height, 20, getRandomColor());
+        }
+        
+        particles.forEach((p, index) => {
+            p.x += p.vx;
+            p.y += p.vy;
+            p.life--;
+            if(p.life <= 0) particles.splice(index, 1);
+            ctx.fillStyle = p.color;
+            ctx.fillRect(p.x, p.y, p.size, p.size);
+        });
+        
+        requestAnimationFrame(celebrationLoop);
+    };
+    celebrationLoop();
+}
+
+function getRandomColor() {
+    const colors = ['#f00', '#0f0', '#00f', '#ff0', '#0ff', '#f0f', '#fff'];
+    return colors[Math.floor(Math.random() * colors.length)];
 }
 
 function createParticles(x, y, count, color) {
