@@ -1,0 +1,403 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Your Quest Awaits</title>
+    <style>
+        body {
+            margin: 0;
+            background: #1a1a1a;
+            color: #fff;
+            font-family: 'Courier New', Courier, monospace;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            overflow: hidden;
+        }
+        #game-container {
+            position: relative;
+            box-shadow: 0 0 20px rgba(0,0,0,0.5);
+        }
+        canvas {
+            background: #0f0f0f;
+            display: block;
+        }
+        /* The Popup Modal Styles */
+        #modal {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            background: rgba(20, 20, 30, 0.95);
+            border: 2px solid #fff;
+            padding: 20px;
+            text-align: center;
+            display: none;
+            width: 300px;
+            box-shadow: 0 0 15px rgba(255,255,255,0.2);
+            border-radius: 8px;
+        }
+        #modal h2 { margin-top: 0; color: #ffd700; }
+        #modal p { margin: 10px 0; font-size: 1.2rem; }
+        #modal .code { 
+            background: #000; 
+            padding: 10px; 
+            border: 1px dashed #666; 
+            color: #0f0; 
+            font-weight: bold;
+            font-size: 1.1rem;
+            margin: 15px 0;
+            user-select: text;
+        }
+        #modal button {
+            background: #fff;
+            color: #000;
+            border: none;
+            padding: 8px 16px;
+            cursor: pointer;
+            font-family: inherit;
+            font-weight: bold;
+        }
+        #modal button:hover { background: #ccc; }
+        
+        /* Mobile Controls Overlay (Optional if he opens on phone) */
+        #controls {
+            display: none; /* Hidden on desktop */
+            position: absolute;
+            bottom: 20px;
+            width: 100%;
+            text-align: center;
+            color: #555;
+        }
+    </style>
+</head>
+<body>
+
+<div id="game-container">
+    <canvas id="gameCanvas" width="800" height="400"></canvas>
+    
+    <div id="modal">
+        <h2 id="gift-title">Game Title</h2>
+        <p>You found a gift!</p>
+        <div class="code" id="gift-code">XXXX-XXXX-XXXX</div>
+        <button onclick="closeModal()">Continue Quest</button>
+    </div>
+</div>
+
+<div id="controls">Use Arrow Keys to Move & Jump</div>
+
+<script>
+/**
+ * ==========================================
+ * CONFIGURATION: EDIT YOUR CODES HERE
+ * ==========================================
+ */
+const GIFT_DATA = [
+    {
+        id: 1,
+        title: "Split Fiction",
+        code: "STEAM-CODE-HERE-123", // <--- REPLACE THIS
+        color: "#00d2ff", // Cyan theme
+        msg: "Reality is splitting..."
+    },
+    {
+        id: 2,
+        title: "Hollow Knight",
+        code: "HK-KEY-CODE-456",     // <--- REPLACE THIS
+        color: "#a0a0a0", // Silver/Grey theme
+        msg: "Enter the void..."
+    },
+    {
+        id: 3,
+        title: "Silksong (Pre-order/Cash)",
+        code: "SILK-SONG-789",       // <--- REPLACE THIS
+        color: "#ff3333", // Red theme
+        msg: "Shaw!"
+    }
+];
+
+/**
+ * GAME ENGINE
+ */
+const canvas = document.getElementById('gameCanvas');
+const ctx = canvas.getContext('2d');
+const modal = document.getElementById('modal');
+
+// Game State
+let gameState = 'START'; // START, PLAYING, PAUSED
+let keys = { right: false, left: false, up: false };
+
+// Player Object
+const player = {
+    x: 50,
+    y: 200,
+    width: 20,
+    height: 20,
+    vx: 0,
+    vy: 0,
+    speed: 5,
+    jump: -12,
+    grounded: false,
+    color: '#fff'
+};
+
+// Physics
+const gravity = 0.6;
+const friction = 0.8;
+
+// World Data
+const platforms = [];
+const chests = [];
+const particles = [];
+
+// Level Design (Simple procedural-ish generation)
+function initLevel() {
+    platforms.length = 0;
+    chests.length = 0;
+    
+    // Floor
+    platforms.push({x: 0, y: 350, w: 2400, h: 50}); 
+    
+    // Walls
+    platforms.push({x: -50, y: 0, w: 50, h: 400}); // Left wall
+    platforms.push({x: 2350, y: 0, w: 50, h: 400}); // Right wall
+
+    // --- ZONE 1: Split Fiction (Jumps) ---
+    platforms.push({x: 200, y: 280, w: 100, h: 20});
+    platforms.push({x: 350, y: 220, w: 100, h: 20});
+    // Chest 1
+    chests.push({x: 380, y: 190, w: 40, h: 30, opened: false, data: GIFT_DATA[0]});
+
+    // --- ZONE 2: Hollow Knight (The Drop) ---
+    // A pit to jump over
+    platforms.push({x: 600, y: 300, w: 100, h: 20});
+    platforms.push({x: 800, y: 250, w: 50, h: 100}); // Pillar
+    platforms.push({x: 950, y: 180, w: 100, h: 20});
+    // Chest 2 (High up)
+    chests.push({x: 980, y: 150, w: 40, h: 30, opened: false, data: GIFT_DATA[1]});
+
+    // --- ZONE 3: Silksong (The Citadel) ---
+    platforms.push({x: 1200, y: 300, w: 100, h: 20});
+    platforms.push({x: 1400, y: 250, w: 100, h: 20});
+    platforms.push({x: 1600, y: 200, w: 100, h: 20});
+    platforms.push({x: 1800, y: 350, w: 200, h: 50}); // Final platform riser
+    // Chest 3 (End)
+    chests.push({x: 1900, y: 320, w: 40, h: 30, opened: false, data: GIFT_DATA[2]});
+}
+
+// Input Handling
+document.addEventListener('keydown', (e) => {
+    if (gameState === 'START' && e.code === 'Space') {
+        gameState = 'PLAYING';
+        loop();
+    }
+    if (e.code === 'ArrowRight' || e.code === 'KeyD') keys.right = true;
+    if (e.code === 'ArrowLeft' || e.code === 'KeyA') keys.left = true;
+    if ((e.code === 'ArrowUp' || e.code === 'Space' || e.code === 'KeyW') && player.grounded) {
+        player.vy = player.jump;
+        player.grounded = false;
+        createParticles(player.x, player.y + player.height, 5, '#fff');
+    }
+});
+
+document.addEventListener('keyup', (e) => {
+    if (e.code === 'ArrowRight' || e.code === 'KeyD') keys.right = false;
+    if (e.code === 'ArrowLeft' || e.code === 'KeyA') keys.left = false;
+});
+
+// Physics & Collision
+function update() {
+    if (gameState !== 'PLAYING') return;
+
+    // Horizontal Movement
+    if (keys.right) player.vx += 1;
+    if (keys.left) player.vx -= 1;
+    player.vx *= friction;
+    player.x += player.vx;
+
+    // Horizontal Collision
+    player.grounded = false;
+    platforms.forEach(plat => {
+        const dir = colCheck(player, plat);
+        if (dir === "l" || dir === "r") {
+            player.vx = 0;
+        }
+    });
+
+    // Vertical Movement
+    player.vy += gravity;
+    player.y += player.vy;
+
+    // Vertical Collision
+    platforms.forEach(plat => {
+        const dir = colCheck(player, plat);
+        if (dir === "b") {
+            player.grounded = true;
+            player.vy = 0;
+        } else if (dir === "t") {
+            player.vy = 0;
+        }
+    });
+
+    // Screen Boundaries / Camera
+    // Simple camera: we just offset drawing by player.x - center
+    
+    // Chest Collision
+    chests.forEach(chest => {
+        if (!chest.opened && isColliding(player, chest)) {
+            openChest(chest);
+        }
+    });
+
+    // Particle update
+    particles.forEach((p, index) => {
+        p.x += p.vx;
+        p.y += p.vy;
+        p.life--;
+        if(p.life <= 0) particles.splice(index, 1);
+    });
+}
+
+// Rendering
+function draw() {
+    // Clear Screen
+    ctx.fillStyle = '#111';
+    ctx.fillRect(0, 0, canvas.width, canvas.height);
+
+    if (gameState === 'START') {
+        ctx.fillStyle = '#fff';
+        ctx.font = '30px Courier New';
+        ctx.textAlign = 'center';
+        ctx.fillText("MERRY CHRISTMAS", canvas.width/2, canvas.height/2 - 20);
+        ctx.font = '16px Courier New';
+        ctx.fillText("Press SPACE to Start", canvas.width/2, canvas.height/2 + 20);
+        return;
+    }
+
+    ctx.save();
+    
+    // Camera logic: Keep player centered horizontally (clamped)
+    let camX = player.x - canvas.width / 2;
+    if (camX < 0) camX = 0;
+    if (camX > 1600) camX = 1600; // Map max width
+    
+    ctx.translate(-camX, 0);
+
+    // Draw Platforms
+    ctx.fillStyle = '#444';
+    platforms.forEach(plat => {
+        ctx.fillRect(plat.x, plat.y, plat.w, plat.h);
+        // Highlight top edge
+        ctx.fillStyle = '#666';
+        ctx.fillRect(plat.x, plat.y, plat.w, 4);
+        ctx.fillStyle = '#444';
+    });
+
+    // Draw Chests
+    chests.forEach(chest => {
+        if (chest.opened) {
+            ctx.fillStyle = '#555'; // Open chest
+            ctx.fillRect(chest.x, chest.y + 10, chest.w, chest.h - 10);
+        } else {
+            // Closed chest glow
+            ctx.shadowBlur = 10;
+            ctx.shadowColor = chest.data.color;
+            ctx.fillStyle = chest.data.color;
+            ctx.fillRect(chest.x, chest.y, chest.w, chest.h);
+            ctx.shadowBlur = 0;
+        }
+    });
+
+    // Draw Particles
+    particles.forEach(p => {
+        ctx.fillStyle = p.color;
+        ctx.fillRect(p.x, p.y, p.size, p.size);
+    });
+
+    // Draw Player
+    ctx.fillStyle = player.color;
+    ctx.fillRect(player.x, player.y, player.width, player.height);
+
+    ctx.restore();
+}
+
+// Game Loop
+function loop() {
+    if (gameState !== 'PAUSED') {
+        update();
+        draw();
+        requestAnimationFrame(loop);
+    }
+}
+
+// Helpers
+function colCheck(shapeA, shapeB) {
+    // A simple AABB collision check function
+    let vX = (shapeA.x + (shapeA.width / 2)) - (shapeB.x + (shapeB.w / 2)),
+        vY = (shapeA.y + (shapeA.height / 2)) - (shapeB.y + (shapeB.h / 2)),
+        hWidths = (shapeA.width / 2) + (shapeB.w / 2),
+        hHeights = (shapeA.height / 2) + (shapeB.h / 2),
+        colDir = null;
+
+    if (Math.abs(vX) < hWidths && Math.abs(vY) < hHeights) {
+        let oX = hWidths - Math.abs(vX),
+            oY = hHeights - Math.abs(vY);
+        if (oX >= oY) {
+            if (vY > 0) { colDir = "t"; shapeA.y += oY; } 
+            else { colDir = "b"; shapeA.y -= oY; }
+        } else {
+            if (vX > 0) { colDir = "l"; shapeA.x += oX; } 
+            else { colDir = "r"; shapeA.x -= oX; }
+        }
+    }
+    return colDir;
+}
+
+function isColliding(a, b) {
+    return a.x < b.x + b.w && a.x + a.width > b.x &&
+           a.y < b.y + b.h && a.y + a.height > b.y;
+}
+
+function openChest(chest) {
+    chest.opened = true;
+    gameState = 'PAUSED';
+    
+    // UI Update
+    document.getElementById('gift-title').innerText = chest.data.title;
+    document.getElementById('gift-title').style.color = chest.data.color;
+    document.getElementById('gift-code').innerText = chest.data.code;
+    modal.style.display = 'block';
+    
+    // FX
+    createParticles(chest.x + chest.w/2, chest.y, 20, chest.data.color);
+    draw(); // Draw one last frame to show open chest
+}
+
+function closeModal() {
+    modal.style.display = 'none';
+    gameState = 'PLAYING';
+    loop();
+}
+
+function createParticles(x, y, count, color) {
+    for(let i=0; i<count; i++) {
+        particles.push({
+            x: x, y: y,
+            vx: (Math.random() - 0.5) * 5,
+            vy: (Math.random() - 0.5) * 5,
+            life: 60,
+            color: color,
+            size: Math.random() * 4 + 2
+        });
+    }
+}
+
+// Start
+initLevel();
+draw(); // Initial render
+
+</script>
+</body>
+</html>
