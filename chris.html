@@ -145,11 +145,15 @@ let gameState = 'START'; // START, PLAYING, PAUSED, END
 let keys = { right: false, left: false, up: false };
 
 // Player Object
+const faceImg = new Image();
+faceImg.src = "./imgs/face.png"; // Make sure this path matches your file
+
+// Player Object
 const player = {
     x: 50,
     y: 200,
-    width: 20,
-    height: 20,
+    width: 40,  // <--- I increased this from 20 to 40 so the face is visible!
+    height: 40, // <--- Keep this the same as width
     vx: 0,
     vy: 0,
     speed: 5,
@@ -346,8 +350,28 @@ function draw() {
     });
 
     // Draw Player
-    ctx.fillStyle = player.color;
-    ctx.fillRect(player.x, player.y, player.width, player.height);
+    if (faceImg.complete && faceImg.naturalWidth !== 0) {
+        ctx.save(); // Save state for clipping
+        
+        // Create a circular clipping path
+        ctx.beginPath();
+        // Calculate center of player
+        const centerX = player.x + player.width / 2;
+        const centerY = player.y + player.height / 2;
+        // Draw circle
+        ctx.arc(centerX, centerY, player.width / 2, 0, Math.PI * 2);
+        ctx.closePath();
+        ctx.clip(); // Anything drawn after this is cropped to the circle
+
+        // Draw the image inside the circle
+        ctx.drawImage(faceImg, player.x, player.y, player.width, player.height);
+        
+        ctx.restore(); // Restore so we don't clip the rest of the game
+    } else {
+        // Fallback if image isn't found
+        ctx.fillStyle = player.color;
+        ctx.fillRect(player.x, player.y, player.width, player.height);
+    }
 
     ctx.restore();
 }
